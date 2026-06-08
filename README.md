@@ -1,16 +1,16 @@
-## Nexus HR Management System
+# Nexus HR Management System
 A professional HR Management System built using Spring Boot and PostgreSQL.
 
-# Tech Stack
+## Tech Stack
 - Java 21
 - Spring Boot
 - Spring Data JPA
 - PostgreSQL
 
-# Completed Modules
+## Completed Modules
 - Employee Module 
 
-# Upcoming Modules
+## Upcoming Modules
 - Department Module
 - Attendance Module
 - Leave Module
