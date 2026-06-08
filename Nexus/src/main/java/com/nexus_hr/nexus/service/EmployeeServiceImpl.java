@@ -1,0 +1,177 @@
+package com.nexus_hr.nexus.service;
+
+import com.nexus_hr.nexus.dto.EmployeeRequest;
+import com.nexus_hr.nexus.dto.EmployeeResponse;
+import com.nexus_hr.nexus.entity.Employee;
+import com.nexus_hr.nexus.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class EmployeeServiceImpl implements EmployeeService {
+
+    private final EmployeeRepository employeeRepository;
+
+    @Override
+    public EmployeeResponse createEmployee(EmployeeRequest request) {
+
+        if (employeeRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        if (employeeRepository.existsByEmployeeCode(request.getEmployeeCode())) {
+            throw new RuntimeException("Employee code already exists");
+        }
+
+        Employee employee = new Employee();
+
+        employee.setEmployeeCode(request.getEmployeeCode());
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setEmail(request.getEmail());
+        employee.setPhoneNumber(request.getPhoneNumber());
+        employee.setJoiningDate(request.getJoiningDate());
+        employee.setStatus(request.getStatus());
+        employee.setDepartment(request.getDepartment());
+        employee.setDesignation(request.getDesignation());
+        employee.setSalary(request.getSalary());
+
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        return mapToResponse(savedEmployee);
+    }
+
+    @Override
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public EmployeeResponse getEmployeeById(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+
+        return mapToResponse(employee);
+    }
+
+    @Override
+    public EmployeeResponse getEmployeeByEmail(String email) {
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Employee not found with email: " + email));
+
+        return mapToResponse(employee);
+    }
+
+    @Override
+    public List<EmployeeResponse> searchEmployeesByFirstName(String firstName) {
+        return employeeRepository.findByFirstNameContainingIgnoreCase(firstName)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+
+        if (request.getEmployeeCode() != null) {
+            employee.setEmployeeCode(request.getEmployeeCode());
+        }
+
+        if (request.getFirstName() != null) {
+            employee.setFirstName(request.getFirstName());
+        }
+
+        if (request.getLastName() != null) {
+            employee.setLastName(request.getLastName());
+        }
+
+        if (request.getEmail() != null) {
+            employee.setEmail(request.getEmail());
+        }
+
+        if (request.getPhoneNumber() != null) {
+            employee.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        if (request.getJoiningDate() != null) {
+            employee.setJoiningDate(request.getJoiningDate());
+        }
+
+        if (request.getStatus() != null) {
+            employee.setStatus(request.getStatus());
+        }
+
+        if (request.getDepartment() != null) {
+            employee.setDepartment(request.getDepartment());
+        }
+
+        if (request.getDesignation() != null) {
+            employee.setDesignation(request.getDesignation());
+        }
+
+        if (request.getSalary() != null) {
+            employee.setSalary(request.getSalary());
+        }
+
+        if (request.getEmployeeCode() != null) {
+
+            if (employeeRepository.existsByEmployeeCodeAndIdNot(
+                    request.getEmployeeCode(), id)) {
+
+                throw new RuntimeException("Employee code already exists");
+            }
+
+            employee.setEmployeeCode(request.getEmployeeCode());
+        }
+
+
+        if (request.getEmail() != null) {
+
+            if (employeeRepository.existsByEmailAndIdNot(
+                    request.getEmail(), id)) {
+
+                throw new RuntimeException("Email already exists");
+            }
+
+            employee.setEmail(request.getEmail());
+        }
+
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return mapToResponse(updatedEmployee);
+    }
+
+    @Override
+    public void deleteEmployee(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+
+        employeeRepository.delete(employee);
+    }
+
+    private EmployeeResponse mapToResponse(Employee employee) {
+        return EmployeeResponse.builder()
+                .id(employee.getId())
+                .employeeCode(employee.getEmployeeCode())
+                .firstName(employee.getFirstName())
+                .lastName(employee.getLastName())
+                .email(employee.getEmail())
+                .phoneNumber(employee.getPhoneNumber())
+                .joiningDate(employee.getJoiningDate())
+                .status(String.valueOf(employee.getStatus()))
+                .department(employee.getDepartment())
+                .designation(employee.getDesignation())
+                .salary(employee.getSalary())
+                .build();
+    }
+}
