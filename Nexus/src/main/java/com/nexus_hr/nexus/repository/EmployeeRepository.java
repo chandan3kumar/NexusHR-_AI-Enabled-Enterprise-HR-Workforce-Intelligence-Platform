@@ -19,5 +19,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByFirstNameContainingIgnoreCase(String firstName);
     boolean existsByEmployeeCodeAndIdNot(String employeeCode, Long id);
 
-    boolean existsByEmailAndIdNot(@Email(message = "Invalid email format") @NotBlank(message = "Email is required") String email, Long id);
+    boolean existsByEmailAndIdNot(@Email(message = "Invalid email format")
+                                  @NotBlank(message = "Email is required") String email, Long id);
 }

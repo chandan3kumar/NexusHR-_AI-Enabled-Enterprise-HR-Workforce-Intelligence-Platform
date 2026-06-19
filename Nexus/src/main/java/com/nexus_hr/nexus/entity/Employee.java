@@ -25,7 +25,10 @@ public class Employee {
     @Column(unique = true)
     private String email;
 
-    private String department;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+   // private String department;
 
     private String designation;
 

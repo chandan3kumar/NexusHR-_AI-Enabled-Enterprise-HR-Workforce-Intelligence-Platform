@@ -1,5 +1,6 @@
 package com.nexus_hr.nexus.dto;
 
+import com.nexus_hr.nexus.entity.EmployeeStatus;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,11 +16,13 @@ public class EmployeeResponse {
     private String firstName;
     private String lastName;
     private String email;
-    private String department;
+    private Long departmentId;
+    private String departmentName;
+    private String departmentCode;
     private String designation;
     private Double salary;
     private String employeeCode;
     private String phoneNumber;
     private LocalDate joiningDate;
-    private String status;
+    private EmployeeStatus status;
 }

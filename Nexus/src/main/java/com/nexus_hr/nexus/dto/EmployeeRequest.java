@@ -24,8 +24,8 @@ public class EmployeeRequest {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank(message = "Department is required")
-    private String department;
+    @NotNull(message = "Department id is required")
+    private Long departmentId;
 
     @NotBlank(message = "Designation is required")
     private String designation;
