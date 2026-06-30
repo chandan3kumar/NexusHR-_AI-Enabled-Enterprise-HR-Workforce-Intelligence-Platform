@@ -217,7 +217,7 @@ Payroll
 git clone https://github.com/chandan3kumar/NexusHR-_AI-Enabled-Enterprise-HR-Workforce-Intelligence-Platform.git
 ```
 
-## By
+## Me:-
 
 **Chandan Kumar**
 
@@ -228,3 +228,6 @@ https://github.com/chandan3kumar
 
 LinkedIn:
 https://www.linkedin.com/in/chandan-kumar-160a12269
+
+portfolio:
+https://chandan-portfolio-a8o2.vercel.app/
