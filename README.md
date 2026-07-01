@@ -75,7 +75,7 @@ NexusHR is a modern Enterprise Human Resource Management System built using Java
 ### Payslip PDF
 - Generate Payslip PDF
 - Download Approved Payroll Payslip
-
+  
 ## Technology Stack
 
 ### Backend
@@ -95,6 +95,8 @@ NexusHR is a modern Enterprise Human Resource Management System built using Java
 
 PostgreSQL
 
+
+
 ## Project Structure
 
 ```text
@@ -107,13 +109,22 @@ src
 ├── security
 ├── service
 └── exception
+```
+# Me:-
 
+## Chandan Kumar
 
-## Me:-
+**Java Backend Developer | Full Stack Developer**
 
-Chandan Kumar
-Java Backend Developer
+MCA (2024–2026)  
+Noida Institute of Engineering and Technology (NIET), Greater Noida
 
-GitHub: https://github.com/chandan3kumar
-LinkedIn: https://www.linkedin.com/in/chandan-kumar-160a12269
-Portfolio: https://chandan-portfolio-a8o2.vercel.app/
+Passionate about building enterprise-grade applications using Java, Spring Boot, React, PostgreSQL, and modern backend technologies.
+
+### Connect with Me
+
+-  **Portfolio:** https://chandan-portfolio-a8o2.vercel.app/
+-  **GitHub:** https://github.com/chandan3kumar
+-  **LinkedIn:** https://www.linkedin.com/in/chandan-kumar-160a12269
+-  **Email:** chandannnkumar1290@gmail.com
+
