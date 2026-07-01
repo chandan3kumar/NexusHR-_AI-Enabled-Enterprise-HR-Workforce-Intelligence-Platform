@@ -1,6 +1,8 @@
 package com.nexus_hr.nexus.controller;
 
+import com.nexus_hr.nexus.dto.PayrollApprovalRequest;
 import com.nexus_hr.nexus.dto.PayrollRequest;
+
 import com.nexus_hr.nexus.dto.PayrollResponse;
 import com.nexus_hr.nexus.service.PayrollService;
 import jakarta.validation.Valid;
@@ -36,5 +38,12 @@ public class PayrollController {
             @PathVariable Long employeeId) {
 
         return ResponseEntity.ok(payrollService.getPayrollsByEmployee(employeeId));
+    }
+    @PutMapping("/{payrollId}/approve")
+    public ResponseEntity<PayrollResponse> approvePayroll(
+            @PathVariable Long payrollId,
+            @Valid @RequestBody PayrollApprovalRequest request) {
+
+        return ResponseEntity.ok(payrollService.approvePayroll(payrollId, request));
     }
 }

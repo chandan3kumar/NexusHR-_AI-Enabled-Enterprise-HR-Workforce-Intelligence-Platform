@@ -39,4 +39,8 @@ public class Payroll {
 
     @Enumerated(EnumType.STRING)
     private PayrollStatus status;
+
+    private Boolean approved;
+
+    private String approvedBy;
 }

@@ -9,4 +9,5 @@ public interface PayrollRepository extends JpaRepository<Payroll, Long> {
 
     List<Payroll> findByEmployeeId(Long employeeId);
     boolean existsByEmployeeIdAndMonthAndYear(Long employeeId, Integer month, Integer year);
+    List<Payroll> findByMonthAndYear(Integer month, Integer year);
 }

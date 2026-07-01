@@ -1,5 +1,6 @@
 package com.nexus_hr.nexus.service;
 
+import com.nexus_hr.nexus.dto.PayrollApprovalRequest;
 import com.nexus_hr.nexus.dto.PayrollRequest;
 import com.nexus_hr.nexus.dto.PayrollResponse;
 
@@ -12,4 +13,5 @@ public interface PayrollService {
     List<PayrollResponse> getAllPayrolls();
 
     List<PayrollResponse> getPayrollsByEmployee(Long employeeId);
+    PayrollResponse approvePayroll(Long payrollId, PayrollApprovalRequest request);
 }

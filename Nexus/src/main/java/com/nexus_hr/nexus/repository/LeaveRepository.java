@@ -18,4 +18,5 @@ public interface LeaveRepository extends JpaRepository<Leave, Long> {
             LocalDate endDate,
             LocalDate startDate
     );
+    long countByStatus(LeaveStatus status);
 }

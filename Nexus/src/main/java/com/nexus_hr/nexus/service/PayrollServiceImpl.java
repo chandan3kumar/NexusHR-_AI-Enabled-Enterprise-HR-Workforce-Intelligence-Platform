@@ -1,5 +1,6 @@
 package com.nexus_hr.nexus.service;
 
+import com.nexus_hr.nexus.dto.PayrollApprovalRequest;
 import com.nexus_hr.nexus.dto.PayrollRequest;
 import com.nexus_hr.nexus.dto.PayrollResponse;
 import com.nexus_hr.nexus.entity.*;
@@ -170,5 +171,33 @@ public class PayrollServiceImpl implements PayrollService {
                 .generatedDate(payroll.getGeneratedDate())
                 .status(payroll.getStatus())
                 .build();
+    }
+    @Override
+    public PayrollResponse approvePayroll(Long payrollId, PayrollApprovalRequest request) {
+
+        Payroll payroll = payrollRepository.findById(payrollId)
+                .orElseThrow(() -> new RuntimeException("Payroll not found with id: " + payrollId));
+
+        if (Boolean.TRUE.equals(payroll.getApproved())) {
+            throw new RuntimeException("Payroll is already approved");
+        }
+
+        double bonus = request.getBonus() == null ? 0.0 : request.getBonus();
+        double extraDeductions = request.getDeductions() == null ? 0.0 : request.getDeductions();
+
+        double existingDeductions = payroll.getDeductions() == null ? 0.0 : payroll.getDeductions();
+
+        double totalDeductions = existingDeductions + extraDeductions;
+
+        double netSalary = payroll.getBasicSalary() + bonus - totalDeductions;
+
+        payroll.setBonus(bonus);
+        payroll.setDeductions(totalDeductions);
+        payroll.setNetSalary(Math.round(netSalary * 100.0) / 100.0);
+        payroll.setApproved(true);
+        payroll.setApprovedBy(request.getApprovedBy());
+        payroll.setStatus(PayrollStatus.APPROVED);
+
+        return mapToResponse(payrollRepository.save(payroll));
     }
 }

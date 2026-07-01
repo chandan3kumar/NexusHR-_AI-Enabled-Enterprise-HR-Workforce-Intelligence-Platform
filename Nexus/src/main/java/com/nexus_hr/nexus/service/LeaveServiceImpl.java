@@ -4,6 +4,7 @@ import com.nexus_hr.nexus.dto.LeaveRequest;
 import com.nexus_hr.nexus.dto.LeaveResponse;
 import com.nexus_hr.nexus.entity.*;
 import com.nexus_hr.nexus.repository.EmployeeRepository;
+import com.nexus_hr.nexus.repository.LeaveBalanceRepository;
 import com.nexus_hr.nexus.repository.LeaveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     private final LeaveRepository leaveRepository;
     private final EmployeeRepository employeeRepository;
+    private final LeaveBalanceRepository leaveBalanceRepository;
 
     @Override
     public LeaveResponse applyLeave(Long employeeId, LeaveRequest request) {
@@ -44,23 +46,37 @@ public class LeaveServiceImpl implements LeaveService {
 
         return mapToResponse(leaveRepository.save(leave));
     }
+@Override
 
-    @Override
-    public LeaveResponse approveLeave(Long leaveId) {
+public LeaveResponse approveLeave(Long leaveId) {
 
-        Leave leave = leaveRepository.findById(leaveId)
-                .orElseThrow(() -> new RuntimeException("Leave not found with id: " + leaveId));
+    Leave leave = leaveRepository.findById(leaveId)
+            .orElseThrow(() -> new RuntimeException("Leave not found with id: " + leaveId));
 
-        if (leave.getStatus() != LeaveStatus.PENDING) {
-            throw new RuntimeException("Only pending leave can be approved");
-        }
-
-        leave.setStatus(LeaveStatus.APPROVED);
-        leave.setApprovedDate(LocalDate.now());
-
-        return mapToResponse(leaveRepository.save(leave));
+    if (leave.getStatus() != LeaveStatus.PENDING) {
+        throw new RuntimeException("Only pending leave can be approved");
     }
 
+    LeaveBalance leaveBalance = leaveBalanceRepository
+            .findByEmployeeId(leave.getEmployee().getId())
+            .orElseThrow(() -> new RuntimeException("Leave balance not found"));
+
+    int leaveDays = leave.getTotalDays().intValue();
+
+    if (leaveBalance.getRemainingLeaves() < leaveDays) {
+        throw new RuntimeException("Insufficient leave balance");
+    }
+
+    leaveBalance.setUsedLeaves(leaveBalance.getUsedLeaves() + leaveDays);
+    leaveBalance.setRemainingLeaves(leaveBalance.getRemainingLeaves() - leaveDays);
+
+    leaveBalanceRepository.save(leaveBalance);
+
+    leave.setStatus(LeaveStatus.APPROVED);
+    leave.setApprovedDate(LocalDate.now());
+
+    return mapToResponse(leaveRepository.save(leave));
+}
     @Override
     public LeaveResponse rejectLeave(Long leaveId) {
 
