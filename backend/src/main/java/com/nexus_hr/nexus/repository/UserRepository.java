@@ -1,5 +1,6 @@
 package com.nexus_hr.nexus.repository;
 
+import com.nexus_hr.nexus.entity.Role;
 import com.nexus_hr.nexus.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
+    boolean existsByRole(Role role);
 }
