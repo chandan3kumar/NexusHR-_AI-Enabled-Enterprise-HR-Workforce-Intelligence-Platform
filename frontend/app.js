@@ -1,4 +1,4 @@
-const API_DEFAULT = "/api";
+const API_DEFAULT = (window.NEXUS_API_BASE || "/api").replace(/\/$/, "");
 const REFRESH_MS = 30000;
 const EMPLOYEE_PAGE_SIZE = 8;
 const ATTENDANCE_PAGE_SIZE = 8;
