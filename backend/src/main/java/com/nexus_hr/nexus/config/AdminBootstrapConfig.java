@@ -46,13 +46,25 @@ public class AdminBootstrapConfig {
             }
 
             if (resetAdminPassword) {
-                userRepository.findByUsername(adminUsername).ifPresentOrElse(admin -> {
+                userRepository.findByUsername(adminUsername)
+                        .or(() -> userRepository.findFirstByRole(Role.ADMIN))
+                        .ifPresentOrElse(admin -> {
                     admin.setPassword(passwordEncoder.encode(adminPassword));
                     admin.setEnabled(true);
                     admin.setRole(Role.ADMIN);
                     userRepository.save(admin);
                     log.info("Bootstrap admin password was reset. Disable ADMIN_BOOTSTRAP_RESET_PASSWORD after login.");
-                }, () -> log.warn("Admin password reset requested, but username '{}' was not found.", adminUsername));
+                }, () -> {
+                    User admin = User.builder()
+                            .username(adminUsername)
+                            .email(adminEmail)
+                            .password(passwordEncoder.encode(adminPassword))
+                            .role(Role.ADMIN)
+                            .enabled(true)
+                            .build();
+                    userRepository.save(admin);
+                    log.info("No admin user existed. Bootstrap admin user was created.");
+                });
                 return;
             }
 
