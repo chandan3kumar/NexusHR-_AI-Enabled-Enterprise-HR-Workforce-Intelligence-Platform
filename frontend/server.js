@@ -1,4 +1,5 @@
 const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 
@@ -50,8 +51,9 @@ const server = http.createServer((request, response) => {
 
 function proxyApi(request, response, url) {
   const target = new URL(url.pathname + url.search, backendOrigin);
+  const client = target.protocol === "https:" ? https : http;
   const { host, origin, referer, ...forwardHeaders } = request.headers;
-  const proxyRequest = http.request(target, {
+  const proxyRequest = client.request(target, {
     method: request.method,
     headers: {
       ...forwardHeaders,
@@ -65,7 +67,8 @@ function proxyApi(request, response, url) {
     proxyResponse.pipe(response);
   });
 
-  proxyRequest.on("error", () => {
+  proxyRequest.on("error", error => {
+    console.error(`Proxy error for ${target.href}: ${error.message}`);
     response.writeHead(502, {
       "Content-Type": "application/json; charset=utf-8",
       ...apiHeaders(request)
