@@ -31,14 +31,32 @@ public class AdminBootstrapConfig {
     @Value("${app.bootstrap.admin.password:}")
     private String adminPassword;
 
+    @Value("${app.bootstrap.admin.reset-password:false}")
+    private boolean resetAdminPassword;
+
     @Bean
     public CommandLineRunner bootstrapAdminUser() {
         return args -> {
-            if (!bootstrapEnabled || userRepository.existsByRole(Role.ADMIN)) {
+            if (!bootstrapEnabled) {
                 return;
             }
             if (adminPassword == null || adminPassword.isBlank()) {
-                log.warn("Admin bootstrap is enabled but ADMIN_BOOTSTRAP_PASSWORD is not set. No admin was created.");
+                log.warn("Admin bootstrap is enabled but ADMIN_BOOTSTRAP_PASSWORD is not set. No admin change was made.");
+                return;
+            }
+
+            if (resetAdminPassword) {
+                userRepository.findByUsername(adminUsername).ifPresentOrElse(admin -> {
+                    admin.setPassword(passwordEncoder.encode(adminPassword));
+                    admin.setEnabled(true);
+                    admin.setRole(Role.ADMIN);
+                    userRepository.save(admin);
+                    log.info("Bootstrap admin password was reset. Disable ADMIN_BOOTSTRAP_RESET_PASSWORD after login.");
+                }, () -> log.warn("Admin password reset requested, but username '{}' was not found.", adminUsername));
+                return;
+            }
+
+            if (userRepository.existsByRole(Role.ADMIN)) {
                 return;
             }
 
