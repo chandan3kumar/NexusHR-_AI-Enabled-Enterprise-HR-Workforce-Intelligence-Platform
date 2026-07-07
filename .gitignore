@@ -1,9 +1,0 @@
-.idea/
-*.iml
-target/
-node_modules/
-.env
-.env.*
-.vercel/
-*.log
-frontend/public/
